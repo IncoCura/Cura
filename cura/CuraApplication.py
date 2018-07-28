@@ -77,7 +77,7 @@ from cura.Machines.Models.MachineManagementModel import MachineManagementModel
 
 from cura.Machines.Models.SettingVisibilityPresetsModel import SettingVisibilityPresetsModel
 
-from cura.Machines.MachineErrorChecker import MachineErrorChecker
+#from cura.Machines.MachineErrorChecker import MachineErrorChecker
 
 from cura.Settings.SettingInheritanceManager import SettingInheritanceManager
 from cura.Settings.SimpleModeSettingsManager import SimpleModeSettingsManager
@@ -193,7 +193,7 @@ class CuraApplication(QtApplication):
         self._setting_inheritance_manager = None
         self._simple_mode_settings_manager = None
         self._cura_scene_controller = None
-        self._machine_error_checker = None
+        #self._machine_error_checker = None
 
         self._quality_profile_drop_down_menu_model = None
         self._custom_quality_profile_drop_down_menu_model = None
@@ -691,8 +691,8 @@ class CuraApplication(QtApplication):
         self._container_manager = ContainerManager(self)
 
         Logger.log("i", "Initializing machine error checker")
-        self._machine_error_checker = MachineErrorChecker(self)
-        self._machine_error_checker.initialize()
+        #self._machine_error_checker = MachineErrorChecker(self)
+        #self._machine_error_checker.initialize()
 
         # Check if we should run as single instance or not. If so, set up a local socket server which listener which
         # coordinates multiple Cura instances and accepts commands.
@@ -808,8 +808,8 @@ class CuraApplication(QtApplication):
     def getSettingVisibilityPresetsModel(self, *args) -> SettingVisibilityPresetsModel:
         return self._setting_visibility_presets_model
 
-    def getMachineErrorChecker(self, *args) -> MachineErrorChecker:
-        return self._machine_error_checker
+    #def getMachineErrorChecker(self, *args) -> MachineErrorChecker:
+        #return self._machine_error_checker
 
     def getMachineManager(self, *args) -> MachineManager:
         if self._machine_manager is None:
