@@ -72,7 +72,7 @@ class CuraEngineBackend(QObject, Backend):
 
         self._application = CuraApplication.getInstance() #type: CuraApplication
         self._multi_build_plate_model = None #type: Optional[MultiBuildPlateModel]
-        self._machine_error_checker = None #type: Optional[MachineErrorChecker]
+        #self._machine_error_checker = None #type: Optional[MachineErrorChecker]
 
         if not default_engine_location:
             raise EnvironmentError("Could not find CuraEngine")
@@ -164,8 +164,8 @@ class CuraEngineBackend(QObject, Backend):
         self._application.getController().toolOperationStarted.connect(self._onToolOperationStarted)
         self._application.getController().toolOperationStopped.connect(self._onToolOperationStopped)
 
-        self._machine_error_checker = self._application.getMachineErrorChecker()
-        self._machine_error_checker.errorCheckFinished.connect(self._onStackErrorCheckFinished)
+        #self._machine_error_checker = self._application.getMachineErrorChecker()
+        #self._machine_error_checker.errorCheckFinished.connect(self._onStackErrorCheckFinished)
 
     ##  Terminate the engine process.
     #
@@ -617,16 +617,16 @@ class CuraEngineBackend(QObject, Backend):
 
     def _invokeSlice(self) -> None:
         if self._use_timer:
+            self._change_timer.start()
             # if the error check is scheduled, wait for the error check finish signal to trigger auto-slice,
             # otherwise business as usual
-            if self._machine_error_checker is None:
-                self._change_timer.stop()
-                return
+            #if self._machine_error_checker is None:
+             #   self._change_timer.stop()
+              #  return
 
-            if self._machine_error_checker.needToWaitForResult:
-                self._change_timer.stop()
-            else:
-                self._change_timer.start()
+            #if self._machine_error_checker.needToWaitForResult:
+             #   self._change_timer.stop()
+            #else:
 
     ##  Called when the engine sends a message that slicing is finished.
     #
@@ -700,16 +700,16 @@ class CuraEngineBackend(QObject, Backend):
     def _onChanged(self, *args: Any, **kwargs: Any) -> None:
         self.needsSlicing()
         if self._use_timer:
+            self._change_timer.start()
             # if the error check is scheduled, wait for the error check finish signal to trigger auto-slice,
             # otherwise business as usual
-            if self._machine_error_checker is None:
-                self._change_timer.stop()
-                return
+            #if self._machine_error_checker is None:
+                #self._change_timer.stop()
+               # return
 
-            if self._machine_error_checker.needToWaitForResult:
-                self._change_timer.stop()
-            else:
-                self._change_timer.start()
+            #if self._machine_error_checker.needToWaitForResult:
+             #   self._change_timer.stop()
+            #else:
 
     ##  Called when a print time message is received from the engine.
     #
