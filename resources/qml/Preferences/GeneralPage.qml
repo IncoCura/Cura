@@ -101,10 +101,10 @@ UM.PreferencesPage
         UM.Preferences.resetPreference("cura/choice_on_open_project")
         setDefaultOpenProjectOption(UM.Preferences.getValue("cura/choice_on_open_project"))
 
-        if (pluginExistsAndEnabled("SliceInfoPlugin")) {
-            UM.Preferences.resetPreference("info/send_slice_info")
-            sendDataCheckbox.checked = boolCheck(UM.Preferences.getValue("info/send_slice_info"))
-        }
+        //if (pluginExistsAndEnabled("SliceInfoPlugin")) {
+            //UM.Preferences.resetPreference("info/send_slice_info")
+            //sendDataCheckbox.checked = boolCheck(UM.Preferences.getValue("info/send_slice_info"))
+        //}
         if (pluginExistsAndEnabled("UpdateChecker")) {
             UM.Preferences.resetPreference("info/automatic_update_check")
             checkUpdatesCheckbox.checked = boolCheck(UM.Preferences.getValue("info/automatic_update_check"))
@@ -669,7 +669,7 @@ UM.PreferencesPage
             Label
             {
                 font.bold: true
-                visible: checkUpdatesCheckbox.visible || sendDataCheckbox.visible
+                visible: checkUpdatesCheckbox.visible
                 text: catalog.i18nc("@label","Privacy")
             }
 
@@ -749,7 +749,7 @@ UM.PreferencesPage
                 target: UM.Preferences
                 onPreferenceChanged:
                 {
-                    sendDataCheckbox.checked = boolCheck(UM.Preferences.getValue("info/send_slice_info"))
+                    //sendDataCheckbox.checked = boolCheck(UM.Preferences.getValue("info/send_slice_info"))
                 }
             }
         }
