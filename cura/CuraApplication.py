@@ -88,7 +88,7 @@ from cura.Settings.SimpleModeSettingsManager import SimpleModeSettingsManager
 from cura.Machines.VariantManager import VariantManager
 
 from .SingleInstance import SingleInstance
-from .AutoSave import AutoSave
+#from .AutoSave import AutoSave
 from . import PlatformPhysics
 from . import BuildVolume
 from . import CameraAnimation
@@ -247,8 +247,8 @@ class CuraApplication(QtApplication):
         self._plugins_loaded = False
 
         # Backups
-        self._auto_save = None
-        self._save_data_enabled = True
+        #self._auto_save = None
+        #self._save_data_enabled = True
 
         from cura.Settings.CuraContainerRegistry import CuraContainerRegistry
         self._container_registry_class = CuraContainerRegistry
@@ -749,8 +749,8 @@ class CuraApplication(QtApplication):
         self._post_start_timer.timeout.connect(self._onPostStart)
         self._post_start_timer.start()
 
-        self._auto_save = AutoSave(self)
-        self._auto_save.initialize()
+        #self._auto_save = AutoSave(self)
+        #self._auto_save.initialize()
 
         self.exec_()
 
@@ -905,8 +905,8 @@ class CuraApplication(QtApplication):
 
         return super().event(event)
 
-    def getAutoSave(self):
-        return self._auto_save
+    #def getAutoSave(self):
+        #return self._auto_save
 
     ##  Get print information (duration / material used)
     def getPrintInformation(self):
