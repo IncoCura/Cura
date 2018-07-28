@@ -1749,17 +1749,16 @@ class CuraApplication(QtApplication):
 
                 Selection.add(node)
 
-    @pyqtSlot()
-    def showMoreInformationDialogForAnonymousDataCollection(self):
-        try:
-            slice_info = self._plugin_registry.getPluginObject("SliceInfoPlugin")
-            slice_info.showMoreInfoDialog()
-        except PluginNotFoundError:
-            Logger.log("w", "Plugin SliceInfo was not found, so not able to show the info dialog.")
+#    @pyqtSlot()
+#    def showMoreInformationDialogForAnonymousDataCollection(self):
+#        try:
+#            slice_info = self._plugin_registry.getPluginObject("SliceInfoPlugin")
+#            slice_info.showMoreInfoDialog()
+#        except PluginNotFoundError:
+#            Logger.log("w", "Plugin SliceInfo was not found, so not able to show the info dialog.")
 
     def addSidebarCustomMenuItem(self, menu_item: dict) -> None:
         self._sidebar_custom_menu_items.append(menu_item)
 
     def getSidebarCustomMenuItems(self) -> list:
         return self._sidebar_custom_menu_items
-
