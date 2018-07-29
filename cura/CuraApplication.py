@@ -119,7 +119,7 @@ numpy.seterr(all = "ignore")
 try:
     from cura.CuraVersion import CuraVersion, CuraBuildType, CuraDebugMode
 except ImportError:
-    CuraVersion = "V1.0.0A"  # [CodeStyle: Reflecting imported value]
+    CuraVersion = "1.0.0"  # [CodeStyle: Reflecting imported value]
     CuraBuildType = ""
     CuraDebugMode = False
 
@@ -149,7 +149,7 @@ class CuraApplication(QtApplication):
 
     def __init__(self, *args, **kwargs):
         super().__init__(name = "cura",
-                         version = CuraVersion,
+                         version = "V" + CuraVersion + "A",
                          buildtype = CuraBuildType,
                          is_debug_mode = CuraDebugMode,
                          tray_icon_name = "cura-icon-32.png",

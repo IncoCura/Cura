@@ -2,19 +2,19 @@
     "cura": {
         "Windows": {
             "major": 1,
-            "minor": 0,
+            "minor": 1,
             "revision": 0,
             "url": "https://ultimaker.com/en/products/ultimaker-cura-software?utm_source=cura&utm_medium=software&utm_campaign=sw-update"
         },
         "Linux": {
             "major": 1,
-            "minor": 0,
+            "minor": 1,
             "revision": 0,
             "url": "https://ultimaker.com/en/products/ultimaker-cura-software?utm_source=cura&utm_medium=software&utm_campaign=sw-update"
         },
         "Darwin": {
             "major": 1,
-            "minor": 0,
+            "minor": 1,
             "revision": 0,
             "url": "https://ultimaker.com/en/products/ultimaker-cura-software?utm_source=cura&utm_medium=software&utm_campaign=sw-update"
         }
