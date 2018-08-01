@@ -30,6 +30,8 @@
         "machine_depth": { "default_value": 200 },
         "machine_width": { "default_value": 200 },
         "adhesion_type": { "default_value": "none" },
+		"retraction_amount": { "default_value": 6.0 },
+		"retraction_speed": { "default_value": 40 },
         "gantry_height": {
             "default_value": 30
         },
