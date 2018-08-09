@@ -69,7 +69,7 @@
 
     "colors": {
 
-        "sidebar": [0, 181, 226, 255],
+        "sidebar": [255, 255, 255, 255],
         "lining": [192, 193, 194, 255],
         "viewport_overlay": [0, 0, 0, 192],
 
@@ -86,13 +86,13 @@
         "topbar_button_text_inactive": [128, 128, 128, 255],
         "topbar_button_text_hovered": [0, 0, 0, 255],
 
-        "text": [255, 255, 255, 255],
+        "text": [0, 0, 0, 255],
         "text_detail": [174, 174, 174, 128],
         "text_link": [12, 169, 227, 255],
         "text_inactive": [174, 174, 174, 255],
         "text_hover": [70, 84, 113, 255],
         "text_pressed": [12, 169, 227, 255],
-        "text_subtext": [255, 255, 255, 255],
+        "text_subtext": [0, 0, 0, 255],
         "text_medium": [128, 128, 128, 255],
         "text_emphasis": [255, 255, 255, 255],
         "text_scene": [31, 36, 39, 255],
@@ -215,8 +215,8 @@
         "slider_text_background": [255, 255, 255, 255],
 
         "quality_slider_unavailable": [179, 179, 179, 255],
-        "quality_slider_available": [255, 255, 255, 255],
-        "quality_slider_handle": [255, 255, 255, 255],
+        "quality_slider_available": [0, 0, 0, 255],
+        "quality_slider_handle": [0, 0, 0, 255],
         "quality_slider_handle_hover": [127, 127, 127, 255],
         "quality_slider_text": [0, 0, 0, 255],
 
