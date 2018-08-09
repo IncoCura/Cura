@@ -1,0 +1,47 @@
+{
+    "version": 2,
+    "name": "SlideFast",
+    "inherits": "fdmprinter",
+    "metadata": {
+        "visible": true,
+        "author": "KangDroid",
+        "manufacturer": "DHSY INCO",
+        "file_formats": "text/x-gcode",
+        "icon": "icon_ultimaker2",
+		"category": "INCO",
+        "supports_usb_connection": true,
+        "machine_extruder_trains":
+        {
+            "0": "slidefast_extruder_0"
+        }
+    },
+
+    "overrides": {
+        "machine_name": { "default_value": "SlideFast" },
+        "infill_sparse_density": { "default_value": 20 },
+        "layer_height": { "default_value": 0.15 },
+        "speed_print": { "default_value": 50 },
+        "speed_infill": { "default_value": 60 },
+        "machine_heated_bed": { "default_value": true },
+        "machine_center_is_zero": { "default_value": false },
+        "machine_height": { "default_value": 180 },
+        "machine_gcode_flavor": { "default_value": "RepRap (Marlin/Sprinter)" },
+        "machine_depth": { "default_value": 200 },
+        "machine_width": { "default_value": 200 },
+		"retraction_amount": { "default_value": 6.0 },
+		"retraction_speed": { "default_value": 40 },
+		"layer_height_0": { "default_value": 0.25 },
+		"adhesion_type": { "default_value": "skirt" },
+		"skirt_line_count": { "default_value": 4 },
+		"speed_travel": { "value": 80 },
+        "gantry_height": {
+            "default_value": 30
+        },
+        "machine_start_gcode": {
+            "default_value": "M140 S{material_bed_temperature}\nM109 S{material_print_temperature}\nM190 S{material_bed_temperature}\nG28 ;Home\nG1 Z15.0 F1000 ;Move the platform down 15mm\nM420 S1 ;Enable Bed Leveling Feature\nG1 Z0.2\nG92 E0\nG1 F200 E30\nG1 F100 Z10\nG1 F3000 X100 Y0\nG92 E0"      
+		},
+        "machine_end_gcode": {
+            "default_value": "M104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84"
+        }
+    }
+}
