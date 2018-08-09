@@ -155,7 +155,7 @@ class CuraApplication(QtApplication):
                          tray_icon_name = "cura-icon-32.png",
                          **kwargs)
 
-        self.default_theme = "cura-light"
+        self.default_theme = "inco-default"
 
         self._boot_loading_time = time.time()
 
