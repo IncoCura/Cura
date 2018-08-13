@@ -104,6 +104,7 @@ from cura.Settings.UserChangesModel import UserChangesModel
 from cura.Settings.ExtrudersModel import ExtrudersModel
 from cura.Settings.MaterialSettingsVisibilityHandler import MaterialSettingsVisibilityHandler
 from cura.Settings.ContainerManager import ContainerManager
+from cura.Settings.SidebarCustomMenuItemsModel import SidebarCustomMenuItemsModel
 
 from cura.ObjectsModel import ObjectsModel
 
@@ -117,11 +118,12 @@ from UM.FlameProfiler import pyqtSlot
 numpy.seterr(all = "ignore")
 
 try:
-    from cura.CuraVersion import CuraVersion, CuraBuildType, CuraDebugMode
+    from cura.CuraVersion import CuraVersion, CuraBuildType, CuraDebugMode, CuraSDKVersion
 except ImportError:
     CuraVersion = "1.0.0"  # [CodeStyle: Reflecting imported value]
     CuraBuildType = ""
     CuraDebugMode = False
+    CuraSDKVerion = ""
 
 
 class CuraApplication(QtApplication):
@@ -225,6 +227,8 @@ class CuraApplication(QtApplication):
         self._update_platform_activity_timer = None
 
         self._need_to_show_user_agreement = True
+
+        self._sidebar_custom_menu_items = []  # type: list # Keeps list of custom menu items for the side bar
 
         self._plugins_loaded = False
 
@@ -910,6 +914,7 @@ class CuraApplication(QtApplication):
         engine.rootContext().setContextProperty("CuraApplication", self)
         engine.rootContext().setContextProperty("PrintInformation", self._print_information)
         engine.rootContext().setContextProperty("CuraActions", self._cura_actions)
+        engine.rootContext().setContextProperty("CuraSDKVersion", CuraSDKVersion)
 
         qmlRegisterUncreatableType(CuraApplication, "Cura", 1, 0, "ResourceTypes", "Just an Enum type")
 
@@ -944,6 +949,7 @@ class CuraApplication(QtApplication):
         qmlRegisterType(MachineNameValidator, "Cura", 1, 0, "MachineNameValidator")
         qmlRegisterType(UserChangesModel, "Cura", 1, 0, "UserChangesModel")
         qmlRegisterSingletonType(ContainerManager, "Cura", 1, 0, "ContainerManager", ContainerManager.getInstance)
+        qmlRegisterType(SidebarCustomMenuItemsModel, "Cura", 1, 0, "SidebarCustomMenuItemsModel")
 
         # As of Qt5.7, it is necessary to get rid of any ".." in the path for the singleton to work.
         actions_url = QUrl.fromLocalFile(os.path.abspath(Resources.getPath(CuraApplication.ResourceTypes.QmlFiles, "Actions.qml")))
@@ -1727,7 +1733,13 @@ class CuraApplication(QtApplication):
                     parent = node.getParent()
 
                 Selection.add(node)
-
+                
     #@pyqtSlot()
     #def showMoreInformationDialogForAnonymousDataCollection(self):
         #cast(SliceInfo, self._plugin_registry.getPluginObject("SliceInfoPlugin")).showMoreInfoDialog()
+
+    def addSidebarCustomMenuItem(self, menu_item: dict) -> None:
+        self._sidebar_custom_menu_items.append(menu_item)
+
+    def getSidebarCustomMenuItems(self) -> list:
+        return self._sidebar_custom_menu_items

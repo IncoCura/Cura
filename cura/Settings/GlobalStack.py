@@ -55,6 +55,12 @@ class GlobalStack(CuraContainerStack):
             return "machine_stack"
         return configuration_type
 
+    def getBuildplateName(self) -> Optional[str]:
+        name = None
+        if self.variant.getId() != "empty_variant":
+            name = self.variant.getName()
+        return name
+
     ##  Add an extruder to the list of extruders of this stack.
     #
     #   \param extruder The extruder to add.
@@ -171,6 +177,9 @@ class GlobalStack(CuraContainerStack):
             if str(check_position) not in extruder_check_position:
                 return False
         return True
+
+    def getHeadAndFansCoordinates(self):
+        return self.getProperty("machine_head_with_fans_polygon", "value")
 
 
 ## private:
