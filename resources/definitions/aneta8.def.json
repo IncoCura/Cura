@@ -32,6 +32,7 @@
 		"retraction_speed": { "default_value": 40 },
 		"layer_height_0": { "default_value": 0.30 },
 		"adhesion_type": { "default_value": "skirt" },
+		"retraction_combing": { "default_value": "off" },
 		"skirt_line_count": { "default_value": 4 },
 		"speed_travel": { "value": 80 },
         "gantry_height": {
