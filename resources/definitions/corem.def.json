@@ -36,6 +36,7 @@
 		"layer_height_0": { "default_value": 0.2 },
 		"adhesion_type": { "default_value": "skirt" },
 		"skirt_line_count": { "default_value": 4 },
+		"retraction_combing": { "default_value": "off" },
 		"speed_travel": { "value": 80 },
         "gantry_height": {
             "default_value": 30
