@@ -111,35 +111,35 @@ Item
     Action
     {
         id: view3DCameraAction;
-        text: catalog.i18nc("@action:inmenu menubar:view","3D View");
+        text: catalog.i18nc("@action:inmenu menubar:view","&3D View");
         onTriggered: UM.Controller.rotateView("3d", 0);
     }
 
     Action
     {
         id: viewFrontCameraAction;
-        text: catalog.i18nc("@action:inmenu menubar:view","Front View");
+        text: catalog.i18nc("@action:inmenu menubar:view","&Front View");
         onTriggered: UM.Controller.rotateView("home", 0);
     }
 
     Action
     {
         id: viewTopCameraAction;
-        text: catalog.i18nc("@action:inmenu menubar:view","Top View");
+        text: catalog.i18nc("@action:inmenu menubar:view","&Top View");
         onTriggered: UM.Controller.rotateView("y", 90);
     }
 
     Action
     {
         id: viewLeftSideCameraAction;
-        text: catalog.i18nc("@action:inmenu menubar:view","Left Side View");
+        text: catalog.i18nc("@action:inmenu menubar:view","&Left Side View");
         onTriggered: UM.Controller.rotateView("x", 90);
     }
 
     Action
     {
         id: viewRightSideCameraAction;
-        text: catalog.i18nc("@action:inmenu menubar:view","Right Side View");
+        text: catalog.i18nc("@action:inmenu menubar:view","&Right Side View");
         onTriggered: UM.Controller.rotateView("x", -90);
     }
 
@@ -230,7 +230,7 @@ Item
     Action
     {
         id: deleteSelectionAction;
-        text: catalog.i18ncp("@action:inmenu menubar:edit", "Delete Selected Model", "Delete Selected Models", UM.Selection.selectionCount);
+        text: catalog.i18ncp("@action:inmenu menubar:edit", "Delete &Selected Model", "Delete &Selected Models", UM.Selection.selectionCount);
         enabled: UM.Controller.toolsEnabled && UM.Selection.hasSelection;
         iconName: "edit-delete";
         shortcut: StandardKey.Delete;
@@ -240,7 +240,7 @@ Item
     Action //Also add backspace as the same function as delete because on Macintosh keyboards the button called "delete" is actually a backspace, and the user expects it to function as a delete.
     {
         id: backspaceSelectionAction
-        text: catalog.i18ncp("@action:inmenu menubar:edit", "Delete Selected Model", "Delete Selected Models", UM.Selection.selectionCount)
+        text: catalog.i18ncp("@action:inmenu menubar:edit", "Delete &Selected Model", "Delete &Selected Models", UM.Selection.selectionCount)
         enabled: UM.Controller.toolsEnabled && UM.Selection.hasSelection
         iconName: "edit-delete"
         shortcut: StandardKey.Backspace
@@ -329,7 +329,7 @@ Item
     Action
     {
         id: selectAllAction;
-        text: catalog.i18nc("@action:inmenu menubar:edit","Select All Models");
+        text: catalog.i18nc("@action:inmenu menubar:edit","&Select All Models");
         enabled: UM.Controller.toolsEnabled;
         iconName: "edit-select-all";
         shortcut: "Ctrl+A";
@@ -387,7 +387,7 @@ Item
     Action
     {
         id: resetAllAction;
-        text: catalog.i18nc("@action:inmenu menubar:edit","Reset All Model Transformations");
+        text: catalog.i18nc("@action:inmenu menubar:edit","Reset All Model &Transformations");
         onTriggered: CuraApplication.resetAll();
     }
 
