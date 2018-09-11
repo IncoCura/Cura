@@ -34,11 +34,18 @@
 		"retraction_combing": { "default_value": "off" },
 		"skirt_line_count": { "default_value": 4 },
 		"speed_travel": { "value": 80 },
+		"raft_margin": { "default_value": 5 },
+		"raft_airgap": { "default_value": 0.25 },
+		"raft_surface_layers": { "default_value": 4 },
+		"raft_surface_thickness": { "value": 0.2 },
+		"raft_interface_thickness": { "value": 0.25 },
+		"raft_interface_line_spacing": { "value": 1.6 },
+		"raft_base_thickness": { "value": 0.38 },
         "gantry_height": {
             "default_value": 30
         },
         "machine_start_gcode": {
-            "default_value": "G29 S3 X1 Y1 Z-0.32500\nG29 S3 X2 Y1 Z-0.20000\nG29 S3 X1 Y2 Z0.12500\nG29 S3 X2 Y2 Z-0.02500\nM140 S{material_bed_temperature}\nM109 S{material_print_temperature}\nM190 S{material_bed_temperature}\nG28 ;Home\nG1 Z15.0 F1000 ;Move the platform down 15mm\nM420 S1 ;Enable Bed Leveling Feature\nG1 Z0.2\nG92 E0\nG1 F200 E30\nG1 F100 Z10\nG1 F3000 X100 Y0\nG92 E0"      
+            "default_value": "G29 S3 X1 Y1 Z-0.32500\nG29 S3 X2 Y1 Z-0.15000\nG29 S3 X1 Y2 Z0.12500\nG29 S3 X2 Y2 Z0.02500\nM140 S{material_bed_temperature}\nM109 S{material_print_temperature}\nM190 S{material_bed_temperature}\nG28 ;Home\nG1 Z15.0 F1000 ;Move the platform down 15mm\nM420 S1 ;Enable Bed Leveling Feature\nG1 Z0.2\nG92 E0\nG1 F200 E30\nG1 F100 Z10\nG1 F3000 X100 Y0\nG92 E0"      
 		},
         "machine_end_gcode": {
             "default_value": "M104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84"

@@ -35,6 +35,13 @@
 		"retraction_combing": { "default_value": "off" },
 		"skirt_line_count": { "default_value": 4 },
 		"speed_travel": { "value": 80 },
+		"raft_margin": { "default_value": 5 },
+		"raft_airgap": { "default_value": 0.25 },
+		"raft_surface_layers": { "default_value": 4 },
+		"raft_surface_thickness": { "value": 0.2 },
+		"raft_interface_thickness": { "value": 0.25 },
+		"raft_interface_line_spacing": { "value": 1.6 },
+		"raft_base_thickness": { "value": 0.38 },
         "gantry_height": {
             "default_value": 30
         },
