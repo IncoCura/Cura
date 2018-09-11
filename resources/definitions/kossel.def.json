@@ -1,0 +1,58 @@
+{
+    "version": 2,
+    "name": "Anycubic Kossel",
+    "inherits": "fdmprinter",
+    "metadata": {
+        "visible": true,
+        "author": "KangDroid",
+        "manufacturer": "DHSY INCO",
+        "file_formats": "text/x-gcode",
+        "icon": "icon_ultimaker2",
+        "supports_usb_connection": true,
+		"category": "INCO",
+        "machine_extruder_trains":
+        {
+            "0": "kossel_extruder_0"
+        }
+    },
+
+    "overrides": {
+        "machine_name": { "default_value": "Anycubic Kossel" },
+        "speed_travel": { "default_value": 80 },
+        "infill_sparse_density": { "default_value": 20 },
+        "layer_height": { "default_value": 0.2 },
+        "speed_print": { "default_value": 50 },
+        "speed_infill": { "default_value": 60 },
+        "machine_heated_bed": { "default_value": false },
+        "machine_center_is_zero": { "default_value": true },
+        "machine_height": { "default_value": 300 },
+        "machine_gcode_flavor": { "default_value": "RepRap (Marlin/Sprinter)" },
+        "machine_depth": { "default_value": 180 },
+        "machine_width": { "default_value": 180 },
+		"machine_shape": { "default_value": "elliptic" },
+        "adhesion_type": { "default_value": "none" },
+		"retraction_amount": { "default_value": 6.0 },
+		"retraction_speed": { "default_value": 40 },
+		"layer_height_0": { "default_value": 0.2 },
+		"adhesion_type": { "default_value": "skirt" },
+		"skirt_line_count": { "default_value": 4 },
+		"retraction_combing": { "default_value": "off" },
+		"speed_travel": { "value": 80 },
+		"raft_margin": { "default_value": 5 },
+		"raft_airgap": { "default_value": 0.25 },
+		"raft_surface_layers": { "default_value": 4 },
+		"raft_surface_thickness": { "value": 0.2 },
+		"raft_interface_thickness": { "value": 0.25 },
+		"raft_interface_line_spacing": { "value": 1.6 },
+		"raft_base_thickness": { "value": 0.38 },
+        "gantry_height": {
+            "default_value": 30
+        },
+        "machine_start_gcode": {
+            "default_value": "M666 X-0.36 Y0.00 Z-0.70\nM665 L217.00 R96.61 H338.80 S200.00 B80.00 X-1.19 Y0.54 Z0.65\nG28 ;Home\nG1 Z15.0 F1000 ;Move the platform down 15mm\nG92 E0\nG1 F200 E3\nG92 E0"      
+		},
+        "machine_end_gcode": {
+            "default_value": "M104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84"
+        }
+    }
+}
