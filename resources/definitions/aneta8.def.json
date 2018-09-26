@@ -49,7 +49,7 @@
             "default_value": "G29 S3 X1 Y1 Z0.35000\nG29 S3 X2 Y1 Z-0.05000nG29 S3 X1 Y2 Z1.08000\nG29 S3 X2 Y2 Z0.55000\nM140 S{material_bed_temperature}\nM109 S{material_print_temperature}\nM190 S{material_bed_temperature}\nG28 ;Home\nM420 S1\nG1 Z15.0 F1000 ;Move the platform down 15mm\nG1 X8 Y8\nG1 Z0.2\nG92 E0\nG1 F200 E30\nG1 F100 Z10\nG1 F3000 X100 Y0\nG92 E0"      
 		},
         "machine_end_gcode": {
-            "default_value": "M104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84"
+            "default_value": "M104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84\nM980 S0"
         }
     }
 }
