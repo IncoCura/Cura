@@ -52,7 +52,7 @@
             "default_value": "M666 X-0.36 Y0.00 Z-0.70\nM665 L217.00 R96.61 H338.80 S200.00 B80.00 X-1.19 Y0.54 Z0.65\nG28 ;Home\nG1 Z15.0 F1000 ;Move the platform down 15mm\nG92 E0\nG1 F200 E3\nG92 E0"      
 		},
         "machine_end_gcode": {
-            "default_value": "M104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84"
+            "default_value": "M104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84\nM980 S0"
         }
     }
 }
