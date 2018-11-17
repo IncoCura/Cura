@@ -128,13 +128,13 @@ if TYPE_CHECKING:
 numpy.seterr(all = "ignore")
 
 try:
-    from cura.CuraVersion import CuraAppDisplayName, CuraVersion, CuraBuildType, CuraDebugMode, CuraSDKVersion
+    from cura.CuraVersion import CuraAppDisplayName, CuraVersion, CuraBuildType, CuraDebugMode, CuraSDKVersion  # type: ignore
 except ImportError:
     CuraAppDisplayName = "Inco Cura"
     CuraVersion = "1.0.1"  # [CodeStyle: Reflecting imported value]
     CuraBuildType = ""
     CuraDebugMode = False
-    CuraSDKVersion = ""
+    CuraSDKVersion = "5.0.0"
 
 
 class CuraApplication(QtApplication):
@@ -164,6 +164,7 @@ class CuraApplication(QtApplication):
         super().__init__(name = "cura",
                          app_display_name = CuraAppDisplayName,
                          version = "V" + CuraVersion + "A",
+                         api_version = CuraSDKVersion,
                          buildtype = CuraBuildType,
                          is_debug_mode = CuraDebugMode,
                          tray_icon_name = "cura-icon-32.png",
