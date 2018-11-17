@@ -130,7 +130,7 @@ numpy.seterr(all = "ignore")
 try:
     from cura.CuraVersion import CuraVersion, CuraBuildType, CuraDebugMode, CuraSDKVersion  # type: ignore
 except ImportError:
-    CuraVersion = "1.0.1"  # [CodeStyle: Reflecting imported value]
+    CuraVersion = "1.1.0"  # [CodeStyle: Reflecting imported value]
     CuraBuildType = ""
     CuraDebugMode = False
     CuraSDKVersion = ""

@@ -2,9 +2,9 @@
     "cura": {
         "Windows": {
             "major": 1,
-            "minor": 0,
-            "revision": 1,
-            "url": "https://github.com/KangDroid/Cura/releases/tag/V1.0.1"
+            "minor": 1,
+            "revision": 0,
+            "url": "https://github.com/KangDroid/Cura/releases/tag/V1.1.0"
         },
         "Linux": {
             "major": 1,
@@ -14,9 +14,9 @@
         },
         "Darwin": {
             "major": 1,
-            "minor": 0,
-            "revision": 1,
-            "url": "https://ultimaker.com/en/products/ultimaker-cura-software?utm_source=cura&utm_medium=software&utm_campaign=sw-update"
+            "minor": 1,
+            "revision": 0,
+            "url": "https://github.com/KangDroid/Cura/releases/tag/V1.1.0"
         }
     }
 }
