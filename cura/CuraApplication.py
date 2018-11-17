@@ -131,7 +131,7 @@ try:
     from cura.CuraVersion import CuraAppDisplayName, CuraVersion, CuraBuildType, CuraDebugMode, CuraSDKVersion  # type: ignore
 except ImportError:
     CuraAppDisplayName = "Inco Cura"
-    CuraVersion = "1.0.1"  # [CodeStyle: Reflecting imported value]
+    CuraVersion = "1.1.0"  # [CodeStyle: Reflecting imported value]
     CuraBuildType = ""
     CuraDebugMode = False
     CuraSDKVersion = "5.0.0"
