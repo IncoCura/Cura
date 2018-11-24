@@ -19,7 +19,7 @@ endif()
 
 set(CURA_VERSION "master" CACHE STRING "Version name of Cura")
 set(CURA_BUILDTYPE "" CACHE STRING "Build type of Cura, eg. 'PPA'")
-set(CURA_SDK_VERSION "" CACHE STRING "SDK version of Cura")
+set(CURA_SDK_VERSION "5.0.0" CACHE STRING "SDK version of Cura")
 set(CURA_CLOUD_API_ROOT "" CACHE STRING "Alternative Cura cloud API root")
 set(CURA_CLOUD_API_VERSION "" CACHE STRING "Alternative Cura cloud API version")
 
