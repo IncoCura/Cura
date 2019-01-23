@@ -77,7 +77,17 @@ Item
                 target: UM.Preferences
                 onPreferenceChanged:
                 {
-                    customPrintSetup.height = UM.Preferences.getValue("view/settings_list_height");
+                    if (preference !== "view/settings_list_height" && preference !== "general/window_height" && preference !== "general/window_state")
+                    {
+                        return;
+                    }
+
+                    customPrintSetup.height =
+                        Math.min
+                        (
+                            UM.Preferences.getValue("view/settings_list_height"),
+                            base.height - (customPrintSetup.mapToItem(null, 0, 0).y + buttonRow.height + UM.Theme.getSize("default_margin").height)
+                        );
                 }
             }
             visible: currentModeIndex == PrintSetupSelectorContents.Mode.Custom
@@ -99,7 +109,7 @@ Item
     {
         id: buttonRow
         property real padding: UM.Theme.getSize("default_margin").width
-        height: childrenRect.height + 2 * padding
+        height: recommendedButton.height + 2 * padding + (draggableArea.visible ? draggableArea.height : 0)
 
         anchors
         {
@@ -139,14 +149,14 @@ Item
         //Invisible area at the bottom with which you can resize the panel.
         MouseArea
         {
+            id: draggableArea
             anchors
             {
                 left: parent.left
                 right: parent.right
                 bottom: parent.bottom
-                top: recommendedButton.bottom
-                topMargin: UM.Theme.getSize("default_lining").height
             }
+            height: childrenRect.height
             cursorShape: Qt.SplitVCursor
             visible: currentModeIndex == PrintSetupSelectorContents.Mode.Custom
             drag
@@ -174,6 +184,31 @@ Item
                     }
 
                     UM.Preferences.setValue("view/settings_list_height", h);
+                }
+            }
+
+            Rectangle
+            {
+                width: parent.width
+                height: UM.Theme.getSize("narrow_margin").height
+                color: UM.Theme.getColor("secondary")
+
+                Rectangle
+                {
+                    anchors.bottom: parent.top
+                    width: parent.width
+                    height: UM.Theme.getSize("default_lining").height
+                    color: UM.Theme.getColor("lining")
+                }
+
+                UM.RecolorImage
+                {
+                    width: UM.Theme.getSize("drag_icon").width
+                    height: UM.Theme.getSize("drag_icon").height
+                    anchors.centerIn: parent
+
+                    source: UM.Theme.getIcon("resize")
+                    color: UM.Theme.getColor("small_button_text")
                 }
             }
         }

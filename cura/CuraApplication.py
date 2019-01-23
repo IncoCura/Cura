@@ -117,6 +117,8 @@ from cura.ObjectsModel import ObjectsModel
 from cura.PrinterOutputDevice import PrinterOutputDevice
 from cura.PrinterOutput.NetworkMJPGImage import NetworkMJPGImage
 
+from cura import ApplicationMetadata, UltimakerCloudAuthentication
+
 from UM.FlameProfiler import pyqtSlot
 from UM.Decorators import override
 
@@ -129,21 +131,11 @@ if TYPE_CHECKING:
 
 numpy.seterr(all = "ignore")
 
-try:
-    from cura.CuraVersion import CuraAppDisplayName, CuraVersion, CuraBuildType, CuraDebugMode, CuraSDKVersion  # type: ignore
-except ImportError:
-    CuraAppDisplayName = "Inco Cura"
-    CuraVersion = "1.1.0"  # [CodeStyle: Reflecting imported value]
-    CuraBuildType = ""
-    CuraDebugMode = False
-    CuraSDKVersion = "6.0.0"
-
-
 class CuraApplication(QtApplication):
     # SettingVersion represents the set of settings available in the machine/extruder definitions.
     # You need to make sure that this version number needs to be increased if there is any non-backwards-compatible
     # changes of the settings.
-    SettingVersion = 6
+    SettingVersion = 7
 
     Created = False
 
@@ -164,11 +156,11 @@ class CuraApplication(QtApplication):
 
     def __init__(self, *args, **kwargs):
         super().__init__(name = "cura",
-                         app_display_name = CuraAppDisplayName,
-                         version = "V" + CuraVersion + "A",
-                         api_version = CuraSDKVersion,
-                         buildtype = CuraBuildType,
-                         is_debug_mode = CuraDebugMode,
+                         app_display_name = ApplicationMetadata.CuraAppDisplayName,
+                         version = "V" + ApplicationMetadata.CuraVersion + "A",
+                         api_version = ApplicationMetadata.CuraSDKVersion,
+                         buildtype = ApplicationMetadata.CuraBuildType,
+                         is_debug_mode = ApplicationMetadata.CuraDebugMode,
                          tray_icon_name = "cura-icon-32.png",
                          **kwargs)
 
@@ -262,6 +254,14 @@ class CuraApplication(QtApplication):
         self._container_registry = None # type: CuraContainerRegistry
         from cura.CuraPackageManager import CuraPackageManager
         self._package_manager_class = CuraPackageManager
+
+    @pyqtProperty(str, constant=True)
+    def ultimakerCloudApiRootUrl(self) -> str:
+        return UltimakerCloudAuthentication.CuraCloudAPIRoot
+
+    @pyqtProperty(str, constant = True)
+    def ultimakerCloudAccountRootUrl(self) -> str:
+        return UltimakerCloudAuthentication.CuraCloudAccountAPIRoot
 
     # Adds command line options to the command line parser. This should be called after the application is created and
     # before the pre-start.
@@ -500,7 +500,7 @@ class CuraApplication(QtApplication):
         preferences.addPreference("cura/choice_on_profile_override", "always_ask")
         preferences.addPreference("cura/choice_on_open_project", "always_ask")
         preferences.addPreference("cura/use_multi_build_plate", False)
-        preferences.addPreference("view/settings_list_height", 600)
+        preferences.addPreference("view/settings_list_height", 400)
         preferences.addPreference("view/settings_visible", False)
         preferences.addPreference("cura/currency", "€")
         preferences.addPreference("cura/material_settings", "{}")
@@ -955,7 +955,7 @@ class CuraApplication(QtApplication):
         engine.rootContext().setContextProperty("CuraApplication", self)
         engine.rootContext().setContextProperty("PrintInformation", self._print_information)
         engine.rootContext().setContextProperty("CuraActions", self._cura_actions)
-        engine.rootContext().setContextProperty("CuraSDKVersion", CuraSDKVersion)
+        engine.rootContext().setContextProperty("CuraSDKVersion", ApplicationMetadata.CuraSDKVersion)
 
         qmlRegisterUncreatableType(CuraApplication, "Cura", 1, 0, "ResourceTypes", "Just an Enum type")
 

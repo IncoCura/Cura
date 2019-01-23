@@ -9,6 +9,21 @@
             "weight": 40,
             "family": "Noto Sans"
         },
+        "large_ja_JP": {
+            "size": 1.35,
+            "weight": 50,
+            "family": "Noto Sans"
+        },
+        "large_zh_CN": {
+            "size": 1.35,
+            "weight": 50,
+            "family": "Noto Sans"
+        },
+        "large_zh_TW": {
+            "size": 1.35,
+            "weight": 50,
+            "family": "Noto Sans"
+        },
         "large_bold": {
             "size": 1.35,
             "weight": 63,
@@ -17,6 +32,21 @@
         "medium": {
             "size": 1.16,
             "weight": 40,
+            "family": "Noto Sans"
+        },
+        "medium_ja_JP": {
+            "size": 1.16,
+            "weight": 50,
+            "family": "Noto Sans"
+        },
+        "medium_zh_CN": {
+            "size": 1.16,
+            "weight": 50,
+            "family": "Noto Sans"
+        },
+        "medium_zh_TW": {
+            "size": 1.16,
+            "weight": 50,
             "family": "Noto Sans"
         },
         "medium_bold": {
@@ -29,8 +59,38 @@
             "weight": 40,
             "family": "Noto Sans"
         },
+        "default_ja_JP": {
+            "size": 1.0,
+            "weight": 50,
+            "family": "Noto Sans"
+        },
+        "default_zh_CN": {
+            "size": 1.0,
+            "weight": 50,
+            "family": "Noto Sans"
+        },
+        "default_zh_TW": {
+            "size": 1.0,
+            "weight": 50,
+            "family": "Noto Sans"
+        },
         "default_bold": {
             "size": 0.95,
+            "weight": 63,
+            "family": "Noto Sans"
+        },
+        "default_bold_ja_JP": {
+            "size": 1.0,
+            "weight": 63,
+            "family": "Noto Sans"
+        },
+        "default_bold_zh_CN": {
+            "size": 1.0,
+            "weight": 63,
+            "family": "Noto Sans"
+        },
+        "default_bold_zh_TW": {
+            "size": 1.0,
             "weight": 63,
             "family": "Noto Sans"
         },
@@ -40,9 +100,42 @@
             "italic": true,
             "family": "Noto Sans"
         },
+        "default_italic_ja_JP": {
+            "size": 1.0,
+            "weight": 50,
+            "italic": true,
+            "family": "Noto Sans"
+        },
+        "default_italic_zh_CN": {
+            "size": 1.0,
+            "weight": 50,
+            "italic": true,
+            "family": "Noto Sans"
+        },
+        "default_italic_zh_TW": {
+            "size": 1.0,
+            "weight": 50,
+            "italic": true,
+            "family": "Noto Sans"
+        },
         "small": {
             "size": 0.7,
             "weight": 40,
+            "family": "Noto Sans"
+        },
+        "small_ja_JP": {
+            "size": 0.7,
+            "weight": 50,
+            "family": "Noto Sans"
+        },
+        "small_zh_CN": {
+            "size": 0.7,
+            "weight": 50,
+            "family": "Noto Sans"
+        },
+        "small_zh_TW": {
+            "size": 0.7,
+            "weight": 50,
             "family": "Noto Sans"
         }
     },
@@ -288,6 +381,7 @@
         "layerview_move_combing": [0, 0, 255, 255],
         "layerview_move_retraction": [128, 128, 255, 255],
         "layerview_support_interface": [64, 192, 255, 255],
+        "layerview_prime_tower": [0, 255, 255, 255],
         "layerview_nozzle": [181, 166, 66, 50],
 
         "tab_status_connected": [50, 130, 255, 255],
@@ -349,11 +443,12 @@
         "print_setup_slider_tickmarks": [0.32, 0.32],
         "print_setup_big_item": [28, 2.5],
         "print_setup_icon": [1.2, 1.2],
+        "drag_icon": [1.416, 0.25],
 
         "expandable_component_content_header": [0.0, 3.0],
 
         "configuration_selector": [35.0, 4.0],
-        "configuration_selector_mode_tabs": [0.0, 3.0],
+        "configuration_selector_mode_tabs": [1.0, 3.0],
 
         "action_panel_widget": [26.0, 0.0],
         "action_panel_information_widget": [20.0, 0.0],
