@@ -1,4 +1,4 @@
-// Copyright (c) 2018 Ultimaker B.V.
+// Copyright (c) 2019 Ultimaker B.V.
 // Cura is released under the terms of the LGPLv3 or higher.
 
 import QtQuick 2.6
@@ -181,11 +181,22 @@ Item
 
             readonly property real paddedWidth: parent.width - padding * 2
             property real textWidth: Math.round(paddedWidth * 0.3)
-            property real controlWidth: paddedWidth - textWidth
+            property real controlWidth:
+            {
+                if(instructionLink == "")
+                {
+                    return paddedWidth - textWidth
+                }
+                else
+                {
+                    return paddedWidth - textWidth - UM.Theme.getSize("print_setup_big_item").height * 0.5 - UM.Theme.getSize("default_margin").width
+                }
+            }
+            property string instructionLink:Cura.ContainerManager.getContainerMetaDataEntry(Cura.MachineManager.activeStack.material.id, "instruction_link", "")
 
             Row
             {
-                height: UM.Theme.getSize("print_setup_item").height
+                height: visible ? childrenRect.height : 0
                 visible: extrudersModel.count > 1  // If there is only one extruder, there is no point to enable/disable that.
 
                 Label
@@ -222,7 +233,7 @@ Item
 
             Row
             {
-                height: UM.Theme.getSize("print_setup_big_item").height
+                height: visible ? childrenRect.height: 0
                 visible: Cura.MachineManager.hasMaterials
 
                 Label
@@ -246,8 +257,8 @@ Item
                     text: Cura.MachineManager.activeStack != null ? Cura.MachineManager.activeStack.material.name : ""
                     tooltip: text
 
-                    height: UM.Theme.getSize("print_setup_big_item").height
                     width: selectors.controlWidth
+                    height: UM.Theme.getSize("print_setup_big_item").height
 
                     style: UM.Theme.styles.print_setup_header_button
                     activeFocusOnPress: true
@@ -256,11 +267,32 @@ Item
                         extruderIndex: Cura.ExtruderManager.activeExtruderIndex
                     }
                 }
+                Item
+                {
+                    width: instructionButton.width + 2 * UM.Theme.getSize("default_margin").width
+                    height: instructionButton.visible ? materialSelection.height: 0
+                    Button
+                    {
+                        id: instructionButton
+                        hoverEnabled: true
+                        contentItem: Item {}
+                        height: 0.5 * materialSelection.height
+                        width: height
+                        anchors.centerIn: parent
+                        background: UM.RecolorImage
+                        {
+                            source: UM.Theme.getIcon("printing_guideline")
+                            color: instructionButton.hovered ? UM.Theme.getColor("primary") : UM.Theme.getColor("icon")
+                        }
+                        visible: selectors.instructionLink != ""
+                        onClicked:Qt.openUrlExternally(selectors.instructionLink)
+                    }
+                }
             }
 
             Row
             {
-                height: UM.Theme.getSize("print_setup_big_item").height
+                height: visible ? childrenRect.height: 0
                 visible: Cura.MachineManager.hasVariants
 
                 Label
@@ -279,13 +311,64 @@ Item
                     id: variantSelection
                     text: Cura.MachineManager.activeVariantName
                     tooltip: Cura.MachineManager.activeVariantName
-
                     height: UM.Theme.getSize("print_setup_big_item").height
                     width: selectors.controlWidth
                     style: UM.Theme.styles.print_setup_header_button
                     activeFocusOnPress: true;
 
                     menu: Cura.NozzleMenu { extruderIndex: Cura.ExtruderManager.activeExtruderIndex }
+                }
+            }
+
+            Row
+            {
+                id: warnings
+                height: visible ? childrenRect.height : 0
+                visible: buildplateCompatibilityError || buildplateCompatibilityWarning
+
+                property bool buildplateCompatibilityError: !Cura.MachineManager.variantBuildplateCompatible && !Cura.MachineManager.variantBuildplateUsable
+                property bool buildplateCompatibilityWarning: Cura.MachineManager.variantBuildplateUsable
+
+                // This is a space holder aligning the warning messages.
+                Label
+                {
+                    text: ""
+                    width: selectors.textWidth
+                    renderType: Text.NativeRendering
+                }
+
+                Item
+                {
+                    width: selectors.controlWidth
+                    height: parent.height
+
+                    UM.RecolorImage
+                    {
+                        id: warningImage
+                        anchors.left: parent.left
+                        source: UM.Theme.getIcon("warning")
+                        width: UM.Theme.getSize("section_icon").width
+                        height: UM.Theme.getSize("section_icon").height
+                        sourceSize.width: width
+                        sourceSize.height: height
+                        color: UM.Theme.getColor("material_compatibility_warning")
+                        visible: !Cura.MachineManager.isCurrentSetupSupported || warnings.buildplateCompatibilityError || warnings.buildplateCompatibilityWarning
+                    }
+
+                    Label
+                    {
+                        id: materialCompatibilityLabel
+                        anchors.left: warningImage.right
+                        anchors.leftMargin: UM.Theme.getSize("default_margin").width
+                        verticalAlignment: Text.AlignVCenter
+                        width: selectors.controlWidth - warningImage.width - UM.Theme.getSize("default_margin").width
+                        text: catalog.i18nc("@label", "Use glue for better adhesion with this material combination.")
+                        font: UM.Theme.getFont("default")
+                        color: UM.Theme.getColor("text")
+                        visible: CuraSDKVersion == "dev" ? false : warnings.buildplateCompatibilityError || warnings.buildplateCompatibilityWarning
+                        wrapMode: Text.WordWrap
+                        renderType: Text.NativeRendering
+                    }
                 }
             }
         }

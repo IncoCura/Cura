@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Cura is released under the terms of the LGPLv3 or higher.
 
 from typing import Any, cast, Tuple, Union, Optional, Dict, List
@@ -13,6 +13,7 @@ from UM.FileHandler.WriteFileJob import WriteFileJob  # To call the file writer 
 from UM.Logger import Logger
 from UM.Settings.ContainerRegistry import ContainerRegistry
 from UM.i18n import i18nCatalog
+from UM.Qt.Duration import Duration, DurationFormat
 
 from UM.Message import Message
 from UM.Scene.SceneNode import SceneNode  # For typing.
@@ -52,6 +53,8 @@ class ClusterUM3OutputDevice(NetworkedPrinterOutputDevice):
     def __init__(self, device_id, address, properties, parent = None) -> None:
         super().__init__(device_id = device_id, address = address, properties=properties, connection_type = ConnectionType.NetworkConnection, parent = parent)
         self._api_prefix = "/cluster-api/v1/"
+
+        self._application = CuraApplication.getInstance()
 
         self._number_of_extruders = 2
 
@@ -124,7 +127,7 @@ class ClusterUM3OutputDevice(NetworkedPrinterOutputDevice):
     def _spawnPrinterSelectionDialog(self):
         if self._printer_selection_dialog is None:
             path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../resources/qml/PrintWindow.qml")
-            self._printer_selection_dialog = CuraApplication.getInstance().createQmlComponent(path, {"OutputDevice": self})
+            self._printer_selection_dialog = self._application.createQmlComponent(path, {"OutputDevice": self})
         if self._printer_selection_dialog is not None:
             self._printer_selection_dialog.show()
 
@@ -194,7 +197,7 @@ class ClusterUM3OutputDevice(NetworkedPrinterOutputDevice):
         self._progress_message = Message(i18n_catalog.i18nc("@info:status", "Sending data to printer"), lifetime = 0,
                                          dismissable = False, progress = -1,
                                          title = i18n_catalog.i18nc("@info:title", "Sending Data"))
-        self._progress_message.addAction("Abort", i18n_catalog.i18nc("@action:button", "Cancel"), icon = None,
+        self._progress_message.addAction("Abort", i18n_catalog.i18nc("@action:button", "Cancel"), icon = "",
                                          description = "")
         self._progress_message.actionTriggered.connect(self._progressMessageActionTriggered)
         self._progress_message.show()
@@ -210,7 +213,7 @@ class ClusterUM3OutputDevice(NetworkedPrinterOutputDevice):
         # Add user name to the print_job
         parts.append(self._createFormPart("name=owner", bytes(self._getUserName(), "utf-8"), "text/plain"))
 
-        file_name = CuraApplication.getInstance().getPrintInformation().jobName + "." + preferred_format["extension"]
+        file_name = self._application.getPrintInformation().jobName + "." + preferred_format["extension"]
 
         output = stream.getvalue()  # Either str or bytes depending on the output mode.
         if isinstance(stream, io.StringIO):
@@ -249,13 +252,18 @@ class ClusterUM3OutputDevice(NetworkedPrinterOutputDevice):
         self._compressing_gcode = False
         self._sending_gcode = False
 
+    ##  The IP address of the printer.
+    @pyqtProperty(str, constant = True)
+    def address(self) -> str:
+        return self._address
+
     def _onUploadPrintJobProgress(self, bytes_sent: int, bytes_total: int) -> None:
         if bytes_total > 0:
             new_progress = bytes_sent / bytes_total * 100
             # Treat upload progress as response. Uploading can take more than 10 seconds, so if we don't, we can get
             # timeout responses if this happens.
             self._last_response_time = time()
-            if self._progress_message is not None and new_progress > self._progress_message.getProgress():
+            if self._progress_message is not None and new_progress != self._progress_message.getProgress():
                 self._progress_message.show()  # Ensure that the message is visible.
                 self._progress_message.setProgress(bytes_sent / bytes_total * 100)
 
@@ -267,7 +275,7 @@ class ClusterUM3OutputDevice(NetworkedPrinterOutputDevice):
                     i18n_catalog.i18nc("@info:status", "Print job was successfully sent to the printer."),
                     lifetime=5, dismissable=True,
                     title=i18n_catalog.i18nc("@info:title", "Data Sent"))
-                self._success_message.addAction("View", i18n_catalog.i18nc("@action:button", "View in Monitor"), icon=None,
+                self._success_message.addAction("View", i18n_catalog.i18nc("@action:button", "View in Monitor"), icon = "",
                                                 description="")
                 self._success_message.actionTriggered.connect(self._successMessageActionTriggered)
                 self._success_message.show()
@@ -283,7 +291,7 @@ class ClusterUM3OutputDevice(NetworkedPrinterOutputDevice):
                 self._progress_message.hide()
             self._compressing_gcode = False
             self._sending_gcode = False
-            CuraApplication.getInstance().getController().setActiveStage("PrepareStage")
+            self._application.getController().setActiveStage("PrepareStage")
 
             # After compressing the sliced model Cura sends data to printer, to stop receiving updates from the request
             # the "reply" should be disconnected
@@ -293,7 +301,7 @@ class ClusterUM3OutputDevice(NetworkedPrinterOutputDevice):
 
     def _successMessageActionTriggered(self, message_id: Optional[str] = None, action_id: Optional[str] = None) -> None:
         if action_id == "View":
-            CuraApplication.getInstance().getController().setActiveStage("MonitorStage")
+            self._application.getController().setActiveStage("MonitorStage")
 
     @pyqtSlot()
     def openPrintJobControlPanel(self) -> None:
@@ -345,6 +353,10 @@ class ClusterUM3OutputDevice(NetworkedPrinterOutputDevice):
     @pyqtSlot(int, result = str)
     def getDateCompleted(self, time_remaining: int) -> str:
         return formatDateCompleted(time_remaining)
+
+    @pyqtSlot(int, result = str)
+    def formatDuration(self, seconds: int) -> str:
+        return Duration(seconds).getDisplayString(DurationFormat.Format.Short)
 
     @pyqtSlot(str)
     def sendJobToTop(self, print_job_uuid: str) -> None:
@@ -547,7 +559,7 @@ class ClusterUM3OutputDevice(NetworkedPrinterOutputDevice):
         return result
 
     def _createMaterialOutputModel(self, material_data: Dict[str, Any]) -> "MaterialOutputModel":
-        material_manager = CuraApplication.getInstance().getMaterialManager()
+        material_manager = self._application.getMaterialManager()
         material_group_list = None
 
         # Avoid crashing if there is no "guid" field in the metadata
@@ -555,8 +567,8 @@ class ClusterUM3OutputDevice(NetworkedPrinterOutputDevice):
         if material_guid:
             material_group_list = material_manager.getMaterialGroupListByGUID(material_guid)
 
-        # This can happen if the connected machine has no material in one or more extruders (if GUID is empty), or the		
-        # material is unknown to Cura, so we should return an "empty" or "unknown" material model.		
+        # This can happen if the connected machine has no material in one or more extruders (if GUID is empty), or the
+        # material is unknown to Cura, so we should return an "empty" or "unknown" material model.
         if material_group_list is None:
             material_name = i18n_catalog.i18nc("@label:material", "Empty") if len(material_data.get("guid", "")) == 0 \
                         else i18n_catalog.i18nc("@label:material", "Unknown")
@@ -659,7 +671,6 @@ class ClusterUM3OutputDevice(NetworkedPrinterOutputDevice):
     def sendMaterialProfiles(self) -> None:
         job = SendMaterialJob(device = self)
         job.run()
-
 
 def loadJsonFromReply(reply: QNetworkReply) -> Optional[List[Dict[str, Any]]]:
     try:
