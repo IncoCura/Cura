@@ -273,14 +273,7 @@ class MachineManager(QObject):
 
     def _onActiveExtruderStackChanged(self) -> None:
         self.blurSettings.emit()  # Ensure no-one has focus.
-        old_active_container_stack = self._active_container_stack
-
         self._active_container_stack = ExtruderManager.getInstance().getActiveExtruderStack()
-
-        if old_active_container_stack != self._active_container_stack:
-            # Many methods and properties related to the active quality actually depend
-            # on _active_container_stack. If it changes, then the properties change.
-            self.activeQualityChanged.emit()
 
     def __emitChangedSignals(self) -> None:
         self.activeQualityChanged.emit()
@@ -370,6 +363,7 @@ class MachineManager(QObject):
             ConfigurationErrorMessage.getInstance().addFaultyContainers(global_stack.getId())
             return  # We're done here
         ExtruderManager.getInstance().setActiveExtruderIndex(0)  # Switch to first extruder
+
         self._global_container_stack = global_stack
         self._application.setGlobalContainerStack(global_stack)
         ExtruderManager.getInstance()._globalContainerStackChanged()
@@ -511,13 +505,13 @@ class MachineManager(QObject):
 
     @pyqtProperty(str, notify = globalContainerChanged)
     def activeMachineFirmwareVersion(self) -> str:
-        if not self._printer_output_devices[0]:
+        if not self._printer_output_devices:
             return ""
         return self._printer_output_devices[0].firmwareVersion
 
     @pyqtProperty(str, notify = globalContainerChanged)
     def activeMachineAddress(self) -> str:
-        if not self._printer_output_devices[0]:
+        if not self._printer_output_devices:
             return ""
         return self._printer_output_devices[0].address
 
@@ -547,14 +541,18 @@ class MachineManager(QObject):
         return bool(self._printer_output_devices) and len(self._printer_output_devices[0].printers) > 1
 
     @pyqtProperty(bool, notify = printerConnectedStatusChanged)
-    def activeMachineHasActiveNetworkConnection(self) -> bool:
+    def activeMachineHasNetworkConnection(self) -> bool:
         # A network connection is only available if any output device is actually a network connected device.
         return any(d.connectionType == ConnectionType.NetworkConnection for d in self._printer_output_devices)
 
     @pyqtProperty(bool, notify = printerConnectedStatusChanged)
-    def activeMachineHasActiveCloudConnection(self) -> bool:
+    def activeMachineHasCloudConnection(self) -> bool:
         # A cloud connection is only available if any output device actually is a cloud connected device.
         return any(d.connectionType == ConnectionType.CloudConnection for d in self._printer_output_devices)
+    
+    @pyqtProperty(bool, notify = printerConnectedStatusChanged)
+    def activeMachineIsUsingCloudConnection(self) -> bool:
+        return self.activeMachineHasCloudConnection and not self.activeMachineHasNetworkConnection
 
     def activeMachineNetworkKey(self) -> str:
         if self._global_container_stack:
@@ -1424,6 +1422,8 @@ class MachineManager(QObject):
                         self._global_container_stack.extruders[position].material = empty_material_container
                     self._global_container_stack.extruders[position].setEnabled(True)
                     self.updateMaterialWithVariant(position)
+
+            self.updateNumberExtrudersEnabled()
 
             if configuration.buildplateConfiguration is not None:
                 global_variant_container_node = self._variant_manager.getBuildplateVariantNode(self._global_container_stack.definition.getId(), configuration.buildplateConfiguration)

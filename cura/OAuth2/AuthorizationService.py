@@ -3,17 +3,22 @@
 
 import json
 import webbrowser
+from datetime import datetime, timedelta
 from typing import Optional, TYPE_CHECKING
 from urllib.parse import urlencode
 import requests.exceptions
 
 
 from UM.Logger import Logger
+from UM.Message import Message
 from UM.Signal import Signal
 
 from cura.OAuth2.LocalAuthorizationServer import LocalAuthorizationServer
-from cura.OAuth2.AuthorizationHelpers import AuthorizationHelpers
+from cura.OAuth2.AuthorizationHelpers import AuthorizationHelpers, TOKEN_TIMESTAMP_FORMAT
 from cura.OAuth2.Models import AuthenticationResponse
+
+from UM.i18n import i18nCatalog
+i18n_catalog = i18nCatalog("cura")
 
 if TYPE_CHECKING:
     from cura.OAuth2.Models import UserProfile, OAuth2Settings
@@ -37,6 +42,14 @@ class AuthorizationService:
         self._user_profile = None  # type: Optional["UserProfile"]
         self._preferences = preferences
         self._server = LocalAuthorizationServer(self._auth_helpers, self._onAuthStateChanged, daemon=True)
+
+        self._unable_to_get_data_message = None  # type: Optional[Message]
+
+        self.onAuthStateChanged.connect(self._authChanged)
+
+    def _authChanged(self, logged_in):
+        if logged_in and self._unable_to_get_data_message is not None:
+            self._unable_to_get_data_message.hide()
 
     def initialize(self, preferences: Optional["Preferences"] = None) -> None:
         if preferences is not None:
@@ -87,17 +100,19 @@ class AuthorizationService:
 
     ##  Get the access token as provided by the repsonse data.
     def getAccessToken(self) -> Optional[str]:
-        if not self.getUserProfile():
-            # We check if we can get the user profile.
-            # If we can't get it, that means the access token (JWT) was invalid or expired.
-            Logger.log("w", "Unable to get the user profile.")
-            return None
-
         if self._auth_data is None:
             Logger.log("d", "No auth data to retrieve the access_token from")
             return None
 
-        return self._auth_data.access_token
+        # Check if the current access token is expired and refresh it if that is the case.
+        # We have a fallback on a date far in the past for currently stored auth data in cura.cfg.
+        received_at = datetime.strptime(self._auth_data.received_at, TOKEN_TIMESTAMP_FORMAT) \
+            if self._auth_data.received_at else datetime(2000, 1, 1)
+        expiry_date = received_at + timedelta(seconds = float(self._auth_data.expires_in or 0) - 60)
+        if datetime.now() > expiry_date:
+            self.refreshAccessToken()
+
+        return self._auth_data.access_token if self._auth_data else None
 
     ##  Try to refresh the access token. This should be used when it has expired.
     def refreshAccessToken(self) -> None:
@@ -158,7 +173,18 @@ class AuthorizationService:
             preferences_data = json.loads(self._preferences.getValue(self._settings.AUTH_DATA_PREFERENCE_KEY))
             if preferences_data:
                 self._auth_data = AuthenticationResponse(**preferences_data)
-                self.onAuthStateChanged.emit(logged_in = True)
+                # Also check if we can actually get the user profile information.
+                user_profile = self.getUserProfile()
+                if user_profile is not None:
+                    self.onAuthStateChanged.emit(logged_in = True)
+                else:
+                    if self._unable_to_get_data_message is not None:
+                        self._unable_to_get_data_message.hide()
+
+                    self._unable_to_get_data_message = Message(i18n_catalog.i18nc("@info", "Unable to reach the Ultimaker account server."), title = i18n_catalog.i18nc("@info:title", "Warning"))
+                    self._unable_to_get_data_message.addAction("retry", i18n_catalog.i18nc("@action:button", "Retry"), "[no_icon]", "[no_description]")
+                    self._unable_to_get_data_message.actionTriggered.connect(self._onMessageActionTriggered)
+                    self._unable_to_get_data_message.show()
         except ValueError:
             Logger.logException("w", "Could not load auth data from preferences")
 
@@ -175,3 +201,7 @@ class AuthorizationService:
         else:
             self._user_profile = None
             self._preferences.resetPreference(self._settings.AUTH_DATA_PREFERENCE_KEY)
+
+    def _onMessageActionTriggered(self, _, action):
+        if action == "retry":
+            self.loadAuthDataFromPreferences()

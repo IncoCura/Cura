@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Cura is released under the terms of the LGPLv3 or higher.
 
 import os
@@ -38,10 +38,8 @@ from UM.Settings.Validator import Validator
 from UM.Message import Message
 from UM.i18n import i18nCatalog
 from UM.Workspace.WorkspaceReader import WorkspaceReader
-from UM.Decorators import deprecated
 
 from UM.Operations.AddSceneNodeOperation import AddSceneNodeOperation
-from UM.Operations.RemoveSceneNodeOperation import RemoveSceneNodeOperation
 from UM.Operations.GroupedOperation import GroupedOperation
 from UM.Operations.SetTransformOperation import SetTransformOperation
 
@@ -308,7 +306,8 @@ class CuraApplication(QtApplication):
         super().initialize()
 
         self.__sendCommandToSingleInstance()
-        self.__initializeSettingDefinitionsAndFunctions()
+        self._initializeSettingDefinitions()
+        self._initializeSettingFunctions()
         self.__addAllResourcesAndContainerResources()
         self.__addAllEmptyContainers()
         self.__setLatestResouceVersionsForVersionUpgrade()
@@ -337,30 +336,39 @@ class CuraApplication(QtApplication):
             resource_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "resources")
             Resources.addSearchPath(resource_path)
 
-    # Adds custom property types, settings types, and extra operators (functions) that need to be registered in
-    # SettingDefinition and SettingFunction.
-    def __initializeSettingDefinitionsAndFunctions(self):
-        self._cura_formula_functions = CuraFormulaFunctions(self)
-
+    @classmethod
+    def _initializeSettingDefinitions(cls):
         # Need to do this before ContainerRegistry tries to load the machines
-        SettingDefinition.addSupportedProperty("settable_per_mesh", DefinitionPropertyType.Any, default = True, read_only = True)
-        SettingDefinition.addSupportedProperty("settable_per_extruder", DefinitionPropertyType.Any, default = True, read_only = True)
+        SettingDefinition.addSupportedProperty("settable_per_mesh", DefinitionPropertyType.Any, default=True,
+                                               read_only=True)
+        SettingDefinition.addSupportedProperty("settable_per_extruder", DefinitionPropertyType.Any, default=True,
+                                               read_only=True)
         # this setting can be changed for each group in one-at-a-time mode
-        SettingDefinition.addSupportedProperty("settable_per_meshgroup", DefinitionPropertyType.Any, default = True, read_only = True)
-        SettingDefinition.addSupportedProperty("settable_globally", DefinitionPropertyType.Any, default = True, read_only = True)
+        SettingDefinition.addSupportedProperty("settable_per_meshgroup", DefinitionPropertyType.Any, default=True,
+                                               read_only=True)
+        SettingDefinition.addSupportedProperty("settable_globally", DefinitionPropertyType.Any, default=True,
+                                               read_only=True)
 
         # From which stack the setting would inherit if not defined per object (handled in the engine)
         # AND for settings which are not settable_per_mesh:
         # which extruder is the only extruder this setting is obtained from
-        SettingDefinition.addSupportedProperty("limit_to_extruder", DefinitionPropertyType.Function, default = "-1", depends_on = "value")
+        SettingDefinition.addSupportedProperty("limit_to_extruder", DefinitionPropertyType.Function, default="-1",
+                                               depends_on="value")
 
         # For settings which are not settable_per_mesh and not settable_per_extruder:
         # A function which determines the glabel/meshgroup value by looking at the values of the setting in all (used) extruders
-        SettingDefinition.addSupportedProperty("resolve", DefinitionPropertyType.Function, default = None, depends_on = "value")
+        SettingDefinition.addSupportedProperty("resolve", DefinitionPropertyType.Function, default=None,
+                                               depends_on="value")
 
         SettingDefinition.addSettingType("extruder", None, str, Validator)
         SettingDefinition.addSettingType("optional_extruder", None, str, None)
         SettingDefinition.addSettingType("[int]", None, str, None)
+
+
+    # Adds custom property types, settings types, and extra operators (functions) that need to be registered in
+    # SettingDefinition and SettingFunction.
+    def _initializeSettingFunctions(self):
+        self._cura_formula_functions = CuraFormulaFunctions(self)
 
         SettingFunction.registerOperator("extruderValue", self._cura_formula_functions.getValueInExtruder)
         SettingFunction.registerOperator("extruderValues", self._cura_formula_functions.getValuesInAllExtruders)

@@ -57,7 +57,6 @@ class Account(QObject):
 
     def initialize(self) -> None:
         self._authorization_service.initialize(self._application.getPreferences())
-
         self._authorization_service.onAuthStateChanged.connect(self._onLoginStateChanged)
         self._authorization_service.onAuthenticationError.connect(self._onLoginStateChanged)
         self._authorization_service.loadAuthDataFromPreferences()
@@ -77,6 +76,9 @@ class Account(QObject):
                 self._error_message.hide()
             self._error_message = Message(error_message, title = i18n_catalog.i18nc("@info:title", "Login failed"))
             self._error_message.show()
+            self._logged_in = False
+            self.loginStateChanged.emit(False)
+            return
 
         if self._logged_in != logged_in:
             self._logged_in = logged_in
