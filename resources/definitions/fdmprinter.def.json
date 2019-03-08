@@ -2750,7 +2750,7 @@
                     "maximum_value": "math.sqrt(machine_max_feedrate_x ** 2 + machine_max_feedrate_y ** 2)",
                     "maximum_value_warning": "300",
                     "value": "speed_layer_0",
-                    "enabled": "resolveOrValue('adhesion_type') == 'skirt' or resolveOrValue('adhesion_type') == 'brim'",
+                    "enabled": "resolveOrValue('adhesion_type') == 'skirt' or resolveOrValue('adhesion_type') == 'brim' or resolveOrValue('draft_shield_enabled') or resolveOrValue('ooze_shield_enabled')",
                     "settable_per_mesh": false,
                     "settable_per_extruder": true,
                     "limit_to_extruder": "adhesion_extruder_nr"
@@ -3092,7 +3092,7 @@
                     "minimum_value": "0.1",
                     "minimum_value_warning": "100",
                     "maximum_value_warning": "10000",
-                    "enabled": "resolveOrValue('acceleration_enabled')",
+                    "enabled": "resolveOrValue('acceleration_enabled') and (resolveOrValue('adhesion_type') == 'skirt' or resolveOrValue('adhesion_type') == 'brim' or resolveOrValue('draft_shield_enabled') or resolveOrValue('ooze_shield_enabled'))",
                     "settable_per_mesh": false,
                     "limit_to_extruder": "adhesion_extruder_nr"
                 },
@@ -3367,7 +3367,7 @@
                     "minimum_value": "0",
                     "maximum_value_warning": "50",
                     "value": "jerk_layer_0",
-                    "enabled": "resolveOrValue('jerk_enabled')",
+                    "enabled": "resolveOrValue('jerk_enabled') and (resolveOrValue('adhesion_type') == 'skirt' or resolveOrValue('adhesion_type') == 'brim' or resolveOrValue('draft_shield_enabled') or resolveOrValue('ooze_shield_enabled'))",
                     "settable_per_mesh": false,
                     "limit_to_extruder": "adhesion_extruder_nr"
                 }
@@ -4579,7 +4579,7 @@
                     "description": "Whether to prime the filament with a blob before printing. Turning this setting on will ensure that the extruder will have material ready at the nozzle before printing. Printing Brim or Skirt can act like priming too, in which case turning this setting off saves some time.",
                     "type": "bool",
                     "resolve": "any(extruderValues('prime_blob_enable'))",
-                    "default_value": true,
+                    "default_value": false,
                     "settable_per_mesh": false,
                     "settable_per_extruder": true,
                     "enabled": false
