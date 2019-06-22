@@ -3,8 +3,9 @@
 
 pragma Singleton
 
-import QtQuick 2.2
+import QtQuick 2.10
 import QtQuick.Controls 1.1
+import QtQuick.Controls 2.3 as Controls2
 import UM 1.1 as UM
 import Cura 1.0 as Cura
 
@@ -60,6 +61,7 @@ Item
     property alias documentation: documentationAction;
     property alias showTroubleshooting: showTroubleShootingAction
     property alias reportBug: reportBugAction;
+    property alias whatsNew: whatsNewAction
     property alias about: aboutAction;
 
     property alias toggleFullScreen: toggleFullScreenAction;
@@ -99,7 +101,7 @@ Item
     Action
     {
         id: redoAction;
-        text: catalog.i18nc("@action:inmenu menubar:edit","&Redo");
+        text: catalog.i18nc("@action:inmenu menubar:edit", "&Redo");
         iconName: "edit-redo";
         shortcut: StandardKey.Redo;
         onTriggered: UM.OperationStack.redo();
@@ -108,65 +110,65 @@ Item
 
     Action
     {
-        id: quitAction;
-        text: catalog.i18nc("@action:inmenu menubar:file","&Quit");
-        iconName: "application-exit";
-        shortcut: StandardKey.Quit;
+        id: quitAction
+        text: catalog.i18nc("@action:inmenu menubar:file","&Quit")
+        iconName: "application-exit"
+        shortcut: StandardKey.Quit
     }
 
     Action
     {
-        id: view3DCameraAction;
-        text: catalog.i18nc("@action:inmenu menubar:view","3D View");
-        onTriggered: UM.Controller.rotateView("3d", 0);
+        id: view3DCameraAction
+        text: catalog.i18nc("@action:inmenu menubar:view", "3D View")
+        onTriggered: UM.Controller.setCameraRotation("3d", 0)
     }
 
     Action
     {
-        id: viewFrontCameraAction;
-        text: catalog.i18nc("@action:inmenu menubar:view","Front View");
-        onTriggered: UM.Controller.rotateView("home", 0);
+        id: viewFrontCameraAction
+        text: catalog.i18nc("@action:inmenu menubar:view", "Front View")
+        onTriggered: UM.Controller.setCameraRotation("home", 0)
     }
 
     Action
     {
-        id: viewTopCameraAction;
-        text: catalog.i18nc("@action:inmenu menubar:view","Top View");
-        onTriggered: UM.Controller.rotateView("y", 90);
+        id: viewTopCameraAction
+        text: catalog.i18nc("@action:inmenu menubar:view", "Top View")
+        onTriggered: UM.Controller.setCameraRotation("y", 90)
     }
 
     Action
     {
-        id: viewLeftSideCameraAction;
-        text: catalog.i18nc("@action:inmenu menubar:view","Left Side View");
-        onTriggered: UM.Controller.rotateView("x", 90);
+        id: viewLeftSideCameraAction
+        text: catalog.i18nc("@action:inmenu menubar:view", "Left Side View")
+        onTriggered: UM.Controller.setCameraRotation("x", 90)
     }
 
     Action
     {
-        id: viewRightSideCameraAction;
-        text: catalog.i18nc("@action:inmenu menubar:view","Right Side View");
-        onTriggered: UM.Controller.rotateView("x", -90);
+        id: viewRightSideCameraAction
+        text: catalog.i18nc("@action:inmenu menubar:view", "Right Side View")
+        onTriggered: UM.Controller.setCameraRotation("x", -90)
     }
 
     Action
     {
-        id: preferencesAction;
-        text: catalog.i18nc("@action:inmenu","Configure Cura...");
-        iconName: "configure";
+        id: preferencesAction
+        text: catalog.i18nc("@action:inmenu", "Configure Cura...")
+        iconName: "configure"
     }
 
     Action
     {
-        id: addMachineAction;
-        text: catalog.i18nc("@action:inmenu menubar:printer","&Add Printer...");
+        id: addMachineAction
+        text: catalog.i18nc("@action:inmenu menubar:printer", "&Add Printer...")
     }
 
     Action
     {
-        id: settingsAction;
-        text: catalog.i18nc("@action:inmenu menubar:printer","Manage Pr&inters...");
-        iconName: "configure";
+        id: settingsAction
+        text: catalog.i18nc("@action:inmenu menubar:printer", "Manage Pr&inters...")
+        iconName: "configure"
     }
 
     Action
@@ -230,6 +232,12 @@ Item
 
     Action
     {
+        id: whatsNewAction;
+        text: catalog.i18nc("@action:inmenu menubar:help", "What's New");
+    }
+
+    Action
+    {
         id: aboutAction;
         text: catalog.i18nc("@action:inmenu menubar:help", "About...");
         iconName: "help-about";
@@ -281,7 +289,7 @@ Item
     {
         id: groupObjectsAction
         text: catalog.i18nc("@action:inmenu menubar:edit","&Group Models");
-        enabled: UM.Scene.numObjectsSelected > 1 ? true: false
+        enabled: UM.Selection.selectionCount > 1 ? true: false
         iconName: "object-group"
         shortcut: "Ctrl+G";
         onTriggered: CuraApplication.groupSelected();
@@ -301,7 +309,7 @@ Item
     {
         id: unGroupObjectsAction
         text: catalog.i18nc("@action:inmenu menubar:edit","Ungroup Models");
-        enabled: UM.Scene.isGroupSelected
+        enabled: UM.Selection.isGroupSelected
         iconName: "object-ungroup"
         shortcut: "Ctrl+Shift+G";
         onTriggered: CuraApplication.ungroupSelected();
@@ -311,7 +319,7 @@ Item
     {
         id: mergeObjectsAction
         text: catalog.i18nc("@action:inmenu menubar:edit","&Merge Models");
-        enabled: UM.Scene.numObjectsSelected > 1 ? true: false
+        enabled: UM.Selection.selectionCount > 1 ? true: false
         iconName: "merge";
         shortcut: "Ctrl+Alt+G";
         onTriggered: CuraApplication.mergeSelected();

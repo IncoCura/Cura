@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Ultimaker B.V.
+# Copyright (c) 2019 Ultimaker B.V.
 # Cura is released under the terms of the LGPLv3 or higher.
 
 from copy import deepcopy
@@ -13,6 +13,7 @@ from UM.Scene.SceneNodeDecorator import SceneNodeDecorator #To cast the deepcopy
 import cura.CuraApplication #To get the build plate.
 from cura.Settings.ExtruderStack import ExtruderStack #For typing.
 from cura.Settings.SettingOverrideDecorator import SettingOverrideDecorator #For per-object settings.
+
 
 ##  Scene nodes that are models are only seen when selecting the corresponding build plate
 #   Note that many other nodes can just be UM SceneNode objects.
@@ -85,16 +86,6 @@ class CuraSceneNode(SceneNode):
             1.0
         ]
 
-    ##  Return if the provided bbox collides with the bbox of this scene node
-    def collidesWithBbox(self, check_bbox: AxisAlignedBox) -> bool:
-        bbox = self.getBoundingBox()
-        if bbox is not None:
-            # Mark the node as outside the build volume if the bounding box test fails.
-            if check_bbox.intersectsBox(bbox) != AxisAlignedBox.IntersectionResult.FullIntersection:
-                return True
-
-        return False
-
     ##  Return if any area collides with the convex hull of this scene node
     def collidesWithArea(self, areas: List[Polygon]) -> bool:
         convex_hull = self.callDecoration("getConvexHull")
@@ -112,21 +103,24 @@ class CuraSceneNode(SceneNode):
 
     ##  Override of SceneNode._calculateAABB to exclude non-printing-meshes from bounding box
     def _calculateAABB(self) -> None:
+        self._aabb = None
         if self._mesh_data:
-            aabb = self._mesh_data.getExtents(self.getWorldTransformation())
+            self._aabb = self._mesh_data.getExtents(self.getWorldTransformation())
         else:  # If there is no mesh_data, use a boundingbox that encompasses the local (0,0,0)
             position = self.getWorldPosition()
-            aabb = AxisAlignedBox(minimum = position, maximum = position)
+            self._aabb = AxisAlignedBox(minimum=position, maximum=position)
 
-        for child in self._children:
+        for child in self.getAllChildren():
             if child.callDecoration("isNonPrintingMesh"):
                 # Non-printing-meshes inside a group should not affect push apart or drop to build plate
                 continue
-            if aabb is None:
-                aabb = child.getBoundingBox()
+            if not child.getMeshData():
+                # Nodes without mesh data should not affect bounding boxes of their parents.
+                continue
+            if self._aabb is None:
+                self._aabb = child.getBoundingBox()
             else:
-                aabb = aabb + child.getBoundingBox()
-        self._aabb = aabb
+                self._aabb = self._aabb + child.getBoundingBox()
 
     ##  Taken from SceneNode, but replaced SceneNode with CuraSceneNode
     def __deepcopy__(self, memo: Dict[int, object]) -> "CuraSceneNode":
