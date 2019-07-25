@@ -45,7 +45,7 @@
             "default_value": 30
         },
         "machine_start_gcode": {
-            "default_value": "G29 S3 X1 Y1 Z-0.32500\nG29 S3 X2 Y1 Z-0.15000\nG29 S3 X1 Y2 Z0.12500\nG29 S3 X2 Y2 Z0.02500\nM140 S{material_bed_temperature}\nM109 S{material_print_temperature}\nM190 S{material_bed_temperature}\nG28 ;Home\nG1 Z15.0 F1000 ;Move the platform down 15mm\nM420 S1 ;Enable Bed Leveling Feature\nG1 Z0.2\nG92 E0\nG1 F200 E30\nG92 E0\nG1 F100 Z10"      
+            "default_value": "M140 S{material_bed_temperature}\nM109 S{material_print_temperature}\nM190 S{material_bed_temperature}\nG28 ;Home\nG1 Z15.0 F1000 ;Move the platform down 15mm\nM420 S1 ;Enable Bed Leveling Feature\nG1 Z0.2\nG92 E0\nG1 F200 E30\nG92 E0\nG1 F100 Z10"      
 		},
         "machine_end_gcode": {
             "default_value": "M104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84\nM980 S0"
