@@ -171,7 +171,7 @@ class CuraApplication(QtApplication):
                          tray_icon_name = "cura-icon-32.png",
                          **kwargs)
 
-        self.default_theme = "cura-light" # cura-dark, cura-light, inco-default
+        self.default_theme = "cura-dark" # cura-dark, cura-light, inco-default
 
         self.change_log_url = "https://ultimaker.com/ultimaker-cura-latest-features"
 
