@@ -7,7 +7,7 @@
         "author": "Ultimaker",
         "category": "Other",
         "manufacturer": "Unknown",
-        "setting_version": 8,
+        "setting_version": 9,
         "file_formats": "text/x-gcode;application/x-stl-ascii;application/x-stl-binary;application/x-wavefront-obj;application/x3g",
         "visible": false,
         "has_materials": true,
@@ -3771,17 +3771,6 @@
                     "enabled": "resolveOrValue('retraction_combing') != 'off' and travel_avoid_other_parts",
                     "settable_per_mesh": false,
                     "settable_per_extruder": true
-                },
-                "start_layers_at_same_position":
-                {
-                    "label": "Start Layers with the Same Part",
-                    "description": "In each layer start with printing the object near the same point, so that we don't start a new layer with printing the piece which the previous layer ended with. This makes for better overhangs and small parts, but increases printing time.",
-                    "type": "bool",
-                    "default_value": false,
-                    "enabled": false,
-                    "settable_per_mesh": false,
-                    "settable_per_extruder": false,
-                    "settable_per_meshgroup": true
                 },
                 "layer_start_x":
                 {
