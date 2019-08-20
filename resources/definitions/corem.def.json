@@ -49,7 +49,7 @@
             "default_value": 30
         },
         "machine_start_gcode": {
-            "default_value": "G28 ;Home\nG1 Z15.0 F1000 ;Move the platform down 15mm\nM420 S1 ;Enable Bed Leveling Feature\nG1 Z0.2\nG92 E0\nG1 F200 E30\nG92 E0\nG1 F100 Z10"      },
+            "default_value": "G28 ;Home\nG1 Z15.0 F1000 ;Move the platform down 15mm\nG1 Z0.2\nG92 E0\nG1 F200 E30\nG92 E0\nG1 F100 Z10"      },
         "machine_end_gcode": {
             "default_value": "M104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84\nG1 Z170"
         }
